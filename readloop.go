@@ -1,6 +1,7 @@
 package kcp
 
 import (
+	"log"
 	"sync/atomic"
 
 	"github.com/pkg/errors"
@@ -11,6 +12,7 @@ func (s *UDPSession) defaultReadLoop() {
 	var src string
 	for {
 		if n, addr, err := s.conn.ReadFrom(buf); err == nil {
+			log.Println("kcp <- ", buf)
 			// make sure the packet is from the same source
 			if src == "" { // set source address
 				src = addr.String()
