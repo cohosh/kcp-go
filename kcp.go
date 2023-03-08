@@ -2,6 +2,7 @@ package kcp
 
 import (
 	"encoding/binary"
+	"log"
 	"sync/atomic"
 	"time"
 )
@@ -546,7 +547,9 @@ func (kcp *KCP) Input(data []byte, regular, ackNoDelay bool) int {
 			break
 		}
 
+		log.Printf("Bytes conf: %v", data[:4])
 		data = ikcp_decode32u(data, &conv)
+		log.Printf("Received conv: %d", conv)
 		if conv != kcp.conv {
 			return -1
 		}
@@ -556,6 +559,7 @@ func (kcp *KCP) Input(data []byte, regular, ackNoDelay bool) int {
 		data = ikcp_decode16u(data, &wnd)
 		data = ikcp_decode32u(data, &ts)
 		data = ikcp_decode32u(data, &sn)
+		log.Printf("Received sn: %d", sn)
 		data = ikcp_decode32u(data, &una)
 		data = ikcp_decode32u(data, &length)
 		if len(data) < int(length) {
